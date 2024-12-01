@@ -35,16 +35,19 @@ func read(scanner bufio.Scanner) []int {
 
 func distance(list1, list2 []int) (int, error) {
 	if len(list1) != len(list2) {
-		return -1, errors.New("lists must be of equal length")
+		return -1, errors.New("slices must be of equal length")
 	}
-	sum := 0
+	sort.Ints(list1)
+	sort.Ints(list2)
+
+	var sum int
 	for i := 0; i < len(list1); i++ {
 		sum += abs(list1[i] - list2[i])
 	}
 	return sum, nil
 }
 
-func sim_score(l1, l2 []int) int {
+func score(l1, l2 []int) int {
 	counts := make(map[int]int)
 
 	for i := 0; i < len(l2); i++ {
@@ -58,24 +61,20 @@ func sim_score(l1, l2 []int) int {
 	return score
 }
 
-func main() {
-	f, err := os.Open("./day1_list1.dat")
+func read_file(name string) []int {
+	f, err := os.Open(name)
 	check(err)
 	defer f.Close()
+	scanner := bufio.NewScanner(f)
+	return read(*scanner)
+}
 
-	f2, err := os.Open("./day1_list2.dat")
+func main() {
+	list1 := read_file("./day1_list1.dat")
+	list2 := read_file("./day1_list2.dat")
+
+	d, err := distance(list1, list2)
 	check(err)
-	defer f2.Close()
-
-	scanner1 := bufio.NewScanner(f)
-	list1 := read(*scanner1)
-	scanner2 := bufio.NewScanner(f2)
-	list2 := read(*scanner2)
-	sort.Ints(list1)
-	sort.Ints(list2)
-
-	d, _ := distance(list1, list2)
 	println("distance:", d)
-
-	println("score:", sim_score(list1, list2))
+	println("score:", score(list1, list2))
 }
