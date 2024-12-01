@@ -8,10 +8,7 @@ func TestDistance(t *testing.T) {
 
 	got, _ := distance(list1, list2)
 	want := 1197984
-
-	if got != want {
-		t.Errorf("got %q want %q", got, want)
-	}
+	assertEq(t, got, want)
 }
 
 func TestScore(t *testing.T) {
@@ -21,7 +18,12 @@ func TestScore(t *testing.T) {
 	got := score(list1, list2)
 	want := 23387399
 
+	assertEq(t, got, want)
+}
+
+func assertEq[T comparable](t testing.TB, got, want T) {
+	t.Helper()
 	if got != want {
-		t.Errorf("got %q want %q", got, want)
+		t.Errorf("got %v want %v", got, want)
 	}
 }
