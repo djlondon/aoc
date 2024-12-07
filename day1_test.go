@@ -3,8 +3,8 @@ package main
 import "testing"
 
 func TestDistance(t *testing.T) {
-	list1 := read_file("./day1_list1.dat")
-	list2 := read_file("./day1_list2.dat")
+	list1 := readFile("./day1_list1.dat")
+	list2 := readFile("./day1_list2.dat")
 
 	got, _ := distance(list1, list2)
 	want := 1197984
@@ -12,8 +12,8 @@ func TestDistance(t *testing.T) {
 }
 
 func TestScore(t *testing.T) {
-	list1 := read_file("./day1_list1.dat")
-	list2 := read_file("./day1_list2.dat")
+	list1 := readFile("./day1_list1.dat")
+	list2 := readFile("./day1_list2.dat")
 
 	got := score(list1, list2)
 	want := 23387399
