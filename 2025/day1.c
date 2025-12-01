@@ -25,16 +25,17 @@
  * modular arithmeticic.
  */
 int mod(int dividend, int divisor) {
-      int ret;
-      ret = (dividend) % divisor;
-      if (ret < 0) ret += divisor;
-      return ret;
+  int ret;
+  ret = (dividend) % divisor;
+  if (ret < 0)
+    ret += divisor;
+  return ret;
 }
 
 int rotate_right_count_all_zeroes(int *dial, int amount) {
-    int rot = *dial + amount;
-    *dial = rot % DIAL_MAX;
-    return rot / DIAL_MAX;
+  int rot = *dial + amount;
+  *dial = rot % DIAL_MAX;
+  return rot / DIAL_MAX;
 }
 
 int rotate_right_count_end_zero(int *dial, int amount) {
@@ -43,18 +44,18 @@ int rotate_right_count_end_zero(int *dial, int amount) {
 }
 
 int rotate_left_count_all_zeroes(int *dial, int amount) {
-    int zero_count = 0;
-    int rot = *dial - amount;
-    // NOTE: This is effectively doing ceiling (rounding up).
-    // A negative number when we're not on zero must mean
-    // we went through zero. However, we still need to consider
-    // when starting at zero, in case we go beyond the DIAL_MAX.
-    if ((rot <= 0 && *dial != 0))
-      zero_count += 1 - rot / DIAL_MAX;
-    else if (rot <= -DIAL_MAX)
-      zero_count += - rot / DIAL_MAX;
-    *dial = mod(rot, DIAL_MAX);
-    return zero_count;
+  int zero_count = 0;
+  int rot = *dial - amount;
+  // NOTE: This is effectively doing ceiling (rounding up).
+  // A negative number when we're not on zero must mean
+  // we went through zero. However, we still need to consider
+  // when starting at zero, in case we go beyond the DIAL_MAX.
+  if ((rot <= 0 && *dial != 0))
+    zero_count += 1 - rot / DIAL_MAX;
+  else if (rot <= -DIAL_MAX)
+    zero_count += -rot / DIAL_MAX;
+  *dial = mod(rot, DIAL_MAX);
+  return zero_count;
 }
 
 int rotate_left_count_end_zero(int *dial, int amount) {
@@ -75,7 +76,7 @@ int main(int argc, char **argv) {
     fprintf(stderr, "part %c must be 1 or 2\n", part);
     exit(1);
   }
-  
+
   FILE *fp;
   if ((fp = fopen(filename, "r")) == NULL) {
     fprintf(stderr, "Failed to open file %s: ", filename);
@@ -94,39 +95,37 @@ int main(int argc, char **argv) {
     dir = buffer[0];
     int amount = atoi(++b);
 
-    #ifdef DEBUG
+#ifdef DEBUG
     printf("%c %d: %s", dir, amount, buffer);
-    #endif
-    
+#endif
+
     if (dir == 'L') {
       if (part == '1')
         zero_count += rotate_left_count_end_zero(&dial, amount);
       else if (part == '2')
         zero_count += rotate_left_count_all_zeroes(&dial, amount);
-    }
-    else if (dir == 'R') {
+    } else if (dir == 'R') {
       if (part == '1')
         zero_count += rotate_right_count_end_zero(&dial, amount);
       else if (part == '2')
         zero_count += rotate_right_count_all_zeroes(&dial, amount);
-    }
-    else continue; /* ignore lines that don't begin with L/R */
+    } else
+      continue; /* ignore lines that don't begin with L/R */
 
-    #ifdef DEBUG
+#ifdef DEBUG
     printf("zero count: %d; dial: %d\n", zero_count, dial);
-    #endif
-
+#endif
   }
 
   if (!feof(fp)) {
-      perror("Issue reading file");
-      fclose(fp);
-      exit(1);
+    perror("Issue reading file");
+    fclose(fp);
+    exit(1);
   }
 
   printf("password: %d\n", zero_count);
 
   fclose(fp);
-  
+
   return 0;
 }
