@@ -1,6 +1,15 @@
 /* Advent of Code Day 1.
  * This problem essentially requires utilising modular arithmetic.
  * Part 2 then requires integer arithmetic (dealing with rounding).
+ *
+ * If someone were to want to actually use this, first you'd want to add:
+ * 1. Handle edge case:
+     - numbers larger than int
+     - numbers that are more than 510 digits
+ * 2. Support stdin rather than just filename input.
+ * 3. Tests.
+ * 4. Performance tuning. You'd want to use a profiler to verify, but
+ *    I imagine the stdlib function `fgets` is suboptimal.
 */
 
 #include <stdio.h>
@@ -54,11 +63,11 @@ int rotate_left_count_end_zero(int *dial, int amount) {
 }
 
 int main(int argc, char **argv) {
-
   if (argc != 3) {
     fprintf(stderr, "Usage %s part filename\n", argv[0]);
     exit(1);
   }
+
   char part = argv[1][0];
   char *filename = argv[2];
 
