@@ -32,35 +32,35 @@ int mod(int dividend, int divisor) {
   return ret;
 }
 
-int rotate_right_count_all_zeroes(int *dial, int amount) {
-  int rot = *dial + amount;
-  *dial = rot % DIAL_MAX;
+int rotate_right(int dial, int amount) {
+  return mod(dial + amount, DIAL_MAX);
+}
+
+int right_count_all_zeroes(int dial, int amount) {
+  int rot = dial + amount;
   return rot / DIAL_MAX;
 }
 
-int rotate_right_count_end_zero(int *dial, int amount) {
-  *dial = (*dial + amount) % DIAL_MAX;
-  return (*dial == 0);
+int count_end_zero(int dial) {
+  return (dial == 0);
 }
 
-int rotate_left_count_all_zeroes(int *dial, int amount) {
+int rotate_left(int dial, int amount) {
+  return mod(dial - amount, DIAL_MAX);
+}
+
+int left_count_all_zeroes(int dial, int amount) {
   int zero_count = 0;
-  int rot = *dial - amount;
+  int rot = dial - amount;
   // NOTE: This is effectively doing ceiling (rounding up).
   // A negative number when we're not on zero must mean
   // we went through zero. However, we still need to consider
   // when starting at zero, in case we go beyond the DIAL_MAX.
-  if ((rot <= 0 && *dial != 0))
-    zero_count += 1 - rot / DIAL_MAX;
+  if ((rot <= 0 && dial != 0))
+    zero_count = 1 - rot / DIAL_MAX;
   else if (rot <= -DIAL_MAX)
-    zero_count += -rot / DIAL_MAX;
-  *dial = mod(rot, DIAL_MAX);
+    zero_count = -rot / DIAL_MAX;
   return zero_count;
-}
-
-int rotate_left_count_end_zero(int *dial, int amount) {
-  *dial = (*dial - amount) % DIAL_MAX;
-  return (*dial == 0);
 }
 
 int main(int argc, char **argv) {
@@ -100,15 +100,23 @@ int main(int argc, char **argv) {
 #endif
 
     if (dir == 'L') {
-      if (part == '1')
-        zero_count += rotate_left_count_end_zero(&dial, amount);
-      else if (part == '2')
-        zero_count += rotate_left_count_all_zeroes(&dial, amount);
+      if (part == '1') {
+        dial = rotate_left(dial, amount);
+        zero_count += count_end_zero(dial);
+      }
+      else if (part == '2') {
+        zero_count += left_count_all_zeroes(dial, amount);
+        dial = rotate_left(dial, amount);
+      }
     } else if (dir == 'R') {
-      if (part == '1')
-        zero_count += rotate_right_count_end_zero(&dial, amount);
-      else if (part == '2')
-        zero_count += rotate_right_count_all_zeroes(&dial, amount);
+        if (part == '1') {
+          dial = rotate_right(dial, amount);
+          zero_count += count_end_zero(dial);
+        }
+        else if (part == '2') {
+          zero_count += right_count_all_zeroes(dial, amount);
+          dial = rotate_right(dial, amount);
+        }
     } else
       continue; /* ignore lines that don't begin with L/R */
 
